@@ -9,10 +9,7 @@ import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.SdkSuppress
 import androidx.test.platform.app.InstrumentationRegistry.getInstrumentation
-import androidx.test.uiautomator.By
-import androidx.test.uiautomator.UiDevice
-import androidx.test.uiautomator.UiObject2
-import androidx.test.uiautomator.Until
+import androidx.test.uiautomator.*
 import com.geekbrains.tests.R
 import org.junit.Assert
 import org.junit.Before
@@ -125,6 +122,35 @@ class BehaviorTest {
         //Чтобы проверить отображение определенного количества репозиториев,
         //вам в одном и том же методе нужно отправить запрос на сервер и открыть DetailsScreen.
         Assert.assertEquals(changedText.text, "Number of results: 0")
+    }
+
+    @Test
+    fun test_OpenDetailsScreenWithResult() {
+        val toDetailsButton = uiDevice.findObject(By.text("TO DETAILS"))
+        val searchButton = uiDevice.findObject(By.res(packageName,"searchButton"))
+        val editText = uiDevice.findObject(By.res(packageName, "searchEditText"))
+
+        editText.text = "UiAutomator"
+        searchButton.click()
+
+        uiDevice.wait(
+            Until.findObject(By.res(packageName, "totalCountTextView")),
+            TIMEOUT
+        )
+
+        toDetailsButton.click()
+
+        uiDevice.wait(
+            Until.findObject(By.res(packageName, "decrementButton")),
+            TIMEOUT
+        )
+
+        val changedText2 = uiDevice.wait(
+            Until.findObject(By.res(packageName, "totalCountTextView")),
+            TIMEOUT
+        )
+
+        Assert.assertEquals(changedText2.text.toString(), "Number of results: 711")
     }
 
     companion object {
