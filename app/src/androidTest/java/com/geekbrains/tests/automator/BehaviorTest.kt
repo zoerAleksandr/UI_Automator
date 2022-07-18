@@ -61,7 +61,7 @@ class BehaviorTest {
 
     //Убеждаемся, что поиск работает как ожидается
     @Test
-    fun test_SearchIsPositive() {
+    fun test_SearchIMEIsPositive() {
         //Через uiDevice находим editText
         val editText = uiDevice.findObject(By.res(packageName, "searchEditText"))
         //Устанавливаем значение
@@ -80,6 +80,23 @@ class BehaviorTest {
         //Убеждаемся, что сервер вернул корректный результат. Обратите внимание, что количество
         //результатов может варьироваться во времени, потому что количество репозиториев постоянно меняется.
         Assert.assertEquals(changedText.text.toString(), "Number of results: 711")
+    }
+
+    @Test
+    fun test_SearchButtonIsPositive() {
+
+        val editText = uiDevice.findObject(By.res(packageName, "searchEditText"))
+        editText.text = "UiAutomator"
+
+        val searchButton = uiDevice.findObject(By.text("SEARCH"))
+        searchButton.click()
+
+        val changedText = uiDevice.wait(
+            Until.findObject(By.res(packageName, "totalCountTextView")),
+            TIMEOUT
+        )
+
+        Assert.assertEquals("Number of results: 711", changedText.text.toString())
     }
 
     //Убеждаемся, что DetailsScreen открывается
